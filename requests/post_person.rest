@@ -1,0 +1,7 @@
+post https://protected-bayou-84240.herokuapp.com/api/persons  
+content-type: application/json
+
+{
+    "name":"cheetoe",
+    "number":"514 485 55s55"
+}
