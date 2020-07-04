@@ -9,8 +9,8 @@ const password = process.argv[2]
 
 const url =
 `mongodb+srv://fullstack:${password}@cluster0-3aprt.mongodb.net/phonebook-app?retryWrites=true&w=majority`
-
 mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true })
+
 
 const personSchema = new mongoose.Schema({
   name: String,

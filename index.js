@@ -1,6 +1,10 @@
+require('dotenv').config()
+
 const express = require("express");
 const app = express();
 const cors = require("cors");
+const mongoose = require('mongoose')
+const Person = require('./models/note')
 
 app.use(express.static("build"));
 app.use(cors());
@@ -31,31 +35,17 @@ let persons = [
   },
 ];
 
-app.get("/", (req, res) => {
-  res.send("<h1>Hello World!1</h1>");
-});
 
-app.get(`${baseUrl}`, (req, res) => {
-  console.log("Give me the head ", req.headers);
-  res.json(persons);
-});
+app.get('/api/persons', (req, res)=>{
+  Person.find({}).then(thePeople=>{
+    res.json(thePeople)
+  })
+})
 
 app.get(`${baseUrl}/:id`, (req, res) => {
-  const id = Number(req.params.id);
-  console.log("appel", req.params);
-
-  console.log("id", id);
-
-  const person = persons.find((person) => {
-    return person.id === id;
-  });
-  console.log("dam da di doo", person);
-
-  if (person) {
-    res.json(person);
-  } else {
-    res.status(404).end();
-  }
+  Person.findById(req.params.id).then(aPerson=>{
+    res.json(aPerson)
+  })
 });
 
 app.delete(`${baseUrl}/:id`, (req, res) => {
@@ -72,6 +62,7 @@ const GenerateID = () => {
   return maxID + 1;
 };
 
+
 app.post(`${baseUrl}`, (req, res) => {
   const body = req.body;
   console.log("in the post req", body);
@@ -82,20 +73,18 @@ app.post(`${baseUrl}`, (req, res) => {
     });
   }
 
-  const person = {
-    id: GenerateID(),
+  const person = new Person({
     name: body.name,
     number: body.number,
-  };
+  });
 
-  console.log("a person", person);
-  persons = persons.concat(person);
-  res.json(person);
+  person.save().then(savedPerson=>{
+    res.json(savedPerson);
+  })
+
 });
 
-// to do put req
-
-const port = process.env.PORT || 3001;
+const port = process.env.PORT 
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
