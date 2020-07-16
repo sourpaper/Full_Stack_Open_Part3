@@ -56,9 +56,9 @@ app.get("/info", (req, res) => {
     }
 
     res.send(
-      "<p>Puhelinluettelossa on " +
+      "<p>The phonebook contains  " +
         count +
-        " henkilön tiedot.</p> <p>" +
+        " personal information.</p> <p>" +
         new Date() +
         "</p>"
     );
@@ -93,11 +93,15 @@ app.post(`${baseUrl}`, (req, res) => {
 
 app.get("/api/persons/:id", (request, response) => {
   Person.findById(request.params.id)
-    .then((note) => {
-      if (note) {
-        response.json(note);
+    .then((aPerson) => {
+      if (aPerson) {
+        response.json(aPerson);
       } else {
-        response.status(404).end();
+        console.log("chicken butt");
+        response
+          .status(404)
+          .send({ error: "valid object id but not in db" })
+          .end();
       }
     })
     .catch((error) => {
@@ -109,7 +113,6 @@ app.get("/api/persons/:id", (request, response) => {
 app.delete(`${baseUrl}/:id`, (req, res, next) => {
   Person.findByIdAndRemove(req.params.id)
     .then((result) => {
-      console.log("Yo it's coming from this side: ", result);
       res.status(204).end();
     })
     .catch((error) => next(error));
