@@ -91,37 +91,8 @@ app.post(`${baseUrl}`, (req, res) => {
   });
 });
 
-// app.get(`${baseUrl}/:id`, (req, res, next) => {
-//   Person.findById(req.params.id)
-//     .then((aPerson) => {
-//       if (aPerson) {
-//         res.json(aPerson.toJSON());
-//       } else {
-//         res
-//           .status(404)
-//           .send({ error: "ayo decent format but not in this db" })
-//           .end();
-//         // next(unknownEndpoint);
-//         // res.status(404).end();
-//       }
-//     })
-//     .catch((error) => next(error));
-// });
-
-// app.get("/api/persons/:id", (req, res, next) => {
-//   Phonebook.findById(req.params.id)
-//     .then((p) => {
-//       if (p) {
-//         res.json(p.toJSON());
-//       } else {
-//         res.status(404).end();
-//       }
-//     })
-//     .catch((error) => next(error));
-// });
-
 app.get("/api/persons/:id", (request, response) => {
-  Note.findById(request.params.id)
+  Person.findById(request.params.id)
     .then((note) => {
       if (note) {
         response.json(note);
