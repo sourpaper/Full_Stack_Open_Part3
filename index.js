@@ -15,6 +15,8 @@ app.use(express.json());
 
 const baseUrl = "/api/persons";
 
+console.log("process.env port", process.env);
+
 morgan.token("body", (req, res) => {
   return JSON.stringify(req.body);
 });
@@ -163,7 +165,7 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(errorHandler);
 
-const port = process.env.PORT;
+const port = process.env.PORT || 3001;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
