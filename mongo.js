@@ -1,4 +1,5 @@
 const mongoose = require("mongoose");
+var uniqueValidator = require("mongoose-unique-validator");
 
 mongoose.set("useFindAndModify", false);
 
@@ -13,13 +14,20 @@ const password = process.argv[2];
 const name = process.argv[3];
 const number = process.argv[4];
 
-const url = `mongodb+srv://fullstack:${password}@cluster0-3aprt.mongodb.net/phonebook-app?retryWrites=true&w=majority`;
-mongoose.connect(url, { useNewUrlParser: true, useUnifiedTopology: true });
+const url = process.env.MONGODB_URI;
+// const url = `mongodb+srv://fullstack:${password}@cluster0-3aprt.mongodb.net/phonebook-app?retryWrites=true&w=majority`;
+mongoose.connect(url, {
+  useNewUrlParser: true,
+  useUnifiedTopology: true,
+  useCreateIndex: true,
+});
 
 const personSchema = new mongoose.Schema({
-  name: String,
-  number: String,
+  name: { type: String, required: true, unique: true },
+  number: { type: String, required: true, unique: true },
 });
+
+personSchema.plugin(uniqueValidator);
 
 const Person = mongoose.model("Person", personSchema);
 

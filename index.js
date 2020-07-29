@@ -15,8 +15,6 @@ app.use(express.json());
 
 const baseUrl = "/api/persons";
 
-console.log("process.env port", process.env);
-
 morgan.token("body", (req, res) => {
   return JSON.stringify(req.body);
 });
@@ -67,7 +65,7 @@ app.get("/info", (req, res) => {
   });
 });
 
-app.get("/api/persons", (req, res) => {
+app.get(`${baseUrl}`, (req, res) => {
   Person.find({}).then((thePeople) => {
     res.json(thePeople);
   });
@@ -88,12 +86,14 @@ app.post(`${baseUrl}`, (req, res) => {
     number: body.number,
   });
 
-  person.save().then((savedPerson) => {
-    res.json(savedPerson);
-  });
+  person
+    .save()
+    .then((savedPerson) => savedPerson.toJSON())
+    .then((savedAndFormattedNote) => res.json(savedAndFormattedNote))
+    .catch((error) => next(error));
 });
 
-app.get("/api/persons/:id", (request, response) => {
+app.get(`${baseUrl}/:id`, (request, response) => {
   Person.findById(request.params.id)
     .then((aPerson) => {
       if (aPerson) {
@@ -128,7 +128,7 @@ const GenerateID = () => {
   return maxID + 1;
 };
 
-app.put("/api/persons/:id", (req, res, next) => {
+app.put(`${baseUrl}/:id`, (req, res, next) => {
   const body = req.body;
   console.log("hello entered");
   if (!body.name) {
@@ -158,6 +158,8 @@ const errorHandler = (error, req, res, next) => {
 
   if (error.name === "CastError") {
     return res.status(400).send({ error: "malformatted id" });
+  } else if (error.name === "ValidationError") {
+    return res.status(400).json({ error: error.message });
   }
 
   next(error);
@@ -165,7 +167,7 @@ const errorHandler = (error, req, res, next) => {
 
 app.use(errorHandler);
 
-const port = process.env.PORT || 3001;
+const port = process.env.PORT;
 app.listen(port, () => {
   console.log(`Server running on port ${port}`);
 });
