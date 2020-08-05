@@ -1,7 +1,4 @@
 const mongoose = require("mongoose");
-var uniqueValidator = require("mongoose-unique-validator");
-
-mongoose.set("useFindAndModify", false);
 
 if (process.argv.length < 3) {
   console.log(
@@ -23,11 +20,14 @@ mongoose.connect(url, {
 });
 
 const personSchema = new mongoose.Schema({
-  name: { type: String, required: true, unique: true },
-  number: { type: String, required: true, unique: true },
+  name: String,
+  number: String,
 });
 
-personSchema.plugin(uniqueValidator);
+// const personSchema = new mongoose.Schema({
+//   name: { type: String, required: true, minlength: 3, unique: true },
+//   number: { type: String, required: true, unique: true },
+// });
 
 const Person = mongoose.model("Person", personSchema);
 

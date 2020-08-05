@@ -71,7 +71,7 @@ app.get(`${baseUrl}`, (req, res) => {
   });
 });
 
-app.post(`${baseUrl}`, (req, res) => {
+app.post(`${baseUrl}`, (req, res, next) => {
   const body = req.body;
   console.log("in the post req", body);
 
