@@ -3,11 +3,8 @@ require("dotenv").config();
 const express = require("express");
 const app = express();
 const cors = require("cors");
-const mongoose = require("mongoose");
 const Person = require("./models/person");
-const { response } = require("express");
 var morgan = require("morgan");
-const { update } = require("./models/person");
 
 app.use(express.static("build"));
 app.use(cors());
@@ -119,14 +116,6 @@ app.delete(`${baseUrl}/:id`, (req, res, next) => {
     })
     .catch((error) => next(error));
 });
-
-const GenerateID = () => {
-  const maxID =
-    persons.length > 0 ? Math.max(...persons.map((person) => person.id)) : 0;
-  console.log("max id", Number(maxID));
-
-  return maxID + 1;
-};
 
 app.put(`${baseUrl}/:id`, (req, res, next) => {
   const body = req.body;
