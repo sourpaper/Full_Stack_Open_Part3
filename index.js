@@ -8,15 +8,17 @@ const cors = require("cors");
 const Person = require("./models/person");
 var morgan = require("morgan");
 
+morgan.token("body", (req, res) => {
+  return JSON.stringify(req.body);
+});
+
 app.use(express.static("build"));
 app.use(cors());
 app.use(express.json());
 
 const baseUrl = "/api/persons";
 
-morgan.token("body", (req, res) => {
-  return JSON.stringify(req.body);
-});
+
 app.use(
   morgan(":method :url :status :res[content-length] - :response-time ms :body")
 );
