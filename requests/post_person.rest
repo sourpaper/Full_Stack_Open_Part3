@@ -1,7 +1,7 @@
-post http://localhost:3001/api/persons/
+post https://protected-bayou-84240.herokuapp.com/api/persons/
 content-type: application/json
 
 {
-    "name":"ab",
-    "number":""
+    "name":"Daph",
+    "number":"999-111-3232"
 }
